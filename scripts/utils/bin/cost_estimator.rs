@@ -212,7 +212,7 @@ async fn main() -> Result<()> {
         split_range_basic(l2_start_block, l2_end_block, args.batch_size)
     };
 
-    info!(
+    println!(
         "The span batch ranges which will be executed: {:?}",
         split_ranges
     );

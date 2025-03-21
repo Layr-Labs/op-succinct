@@ -6,6 +6,7 @@ use alloy_rlp::Decodable;
 use alloy_sol_types::SolValue;
 use anyhow::Result;
 use anyhow::{anyhow, bail};
+use hokulea_host_bin::cfg::SingleChainHostWithEigenDA;
 use kona_genesis::RollupConfig;
 use kona_host::single::SingleChainHost;
 use kona_protocol::calculate_tx_l1_cost_fjord;
@@ -751,7 +752,7 @@ impl OPSuccinctDataFetcher {
         l2_end_block: u64,
         l1_head_hash: Option<B256>,
         safe_db_fallback: bool,
-    ) -> Result<SingleChainHost> {
+    ) -> Result<SingleChainHostWithEigenDA> {
         // If the rollup config is not already loaded, fetch and save it.
         if self.rollup_config.is_none() {
             return Err(anyhow::anyhow!("Rollup config not loaded."));
@@ -849,7 +850,7 @@ impl OPSuccinctDataFetcher {
         // witness data.
         fs::create_dir_all(&data_directory).expect("Failed to create data directory");
 
-        Ok(SingleChainHost {
+        let kona_cfg = SingleChainHost {
             l1_head: l1_head_hash,
             agreed_l2_output_root,
             agreed_l2_head_hash,
@@ -882,6 +883,10 @@ impl OPSuccinctDataFetcher {
             native: false,
             server: true,
             rollup_config_path: self.rollup_config_path.clone(),
+        };
+        Ok(SingleChainHostWithEigenDA {
+            kona_cfg,
+            eigenda_proxy_address: Some("http://127.0.0.1:61181".to_string()),
         })
     }
 }

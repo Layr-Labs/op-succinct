@@ -25,6 +25,9 @@ kona-rpc.workspace = true
 kona-protocol.workspace = true
 kona-genesis.workspace = true
 
+# hokulea
+hokulea-proof.workspace = true
+
 # general
 anyhow.workspace = true
 async-trait.workspace = true

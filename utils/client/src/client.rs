@@ -19,7 +19,7 @@ use kona_genesis::RollupConfig;
 use kona_preimage::{CommsClient, PreimageKey};
 use kona_proof::errors::OracleProviderError;
 use kona_proof::executor::KonaExecutor;
-use kona_proof::l1::{OracleL1ChainProvider, OraclePipeline};
+use kona_proof::l1::{OracleL1ChainProvider}; //, OraclePipeline};
 use kona_proof::l2::OracleL2ChainProvider;
 use kona_proof::sync::new_pipeline_cursor;
 use kona_proof::{BootInfo, FlushableCache, HintType};
@@ -35,6 +35,8 @@ use tracing::info;
 use tracing::warn;
 
 use crate::oracle::OPSuccinctOracleBlobProvider;
+use hokulea_proof::eigenda_provider::OracleEigenDAProvider;
+use hokulea_proof::pipeline::OraclePipeline;
 
 // Sourced from https://github.com/op-rs/kona/tree/main/bin/client/src/single.rs
 pub async fn run_opsuccinct_client<O>(
@@ -64,6 +66,9 @@ where
     let mut l2_provider =
         OracleL2ChainProvider::new(safe_head_hash, rollup_config.clone(), oracle.clone());
     let beacon = OPSuccinctOracleBlobProvider::new(oracle.clone());
+
+
+    let eigenda_blob_provider = OracleEigenDAProvider::new(oracle.clone());
 
     // Fetch the safe head's block header.
     let safe_head = l2_provider
@@ -110,8 +115,10 @@ where
         beacon,
         l1_provider.clone(),
         l2_provider.clone(),
+        eigenda_blob_provider,
     )
     .await?;
+
     let executor = KonaExecutor::new(
         &rollup_config,
         l2_provider.clone(),

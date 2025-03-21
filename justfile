@@ -4,6 +4,15 @@ default:
 # Runs the op-succinct program for a single block.
 run-single l2_block_num use-cache="false" prove="false":
   #!/usr/bin/env bash
+
+  set -a
+  L1_RPC="http://$(kurtosis port print eigenda-memstore-devnet el-1-geth-teku rpc)"
+  L1_BEACON_RPC="$(kurtosis port print eigenda-memstore-devnet cl-1-teku-geth http)"
+  L2_RPC="$(kurtosis port print eigenda-memstore-devnet op-el-1-op-geth-op-node-op-kurtosis rpc)"
+  L2_NODE_RPC="$(kurtosis port print eigenda-memstore-devnet op-cl-1-op-node-op-geth-op-kurtosis http)"
+  set +a
+
+
   CACHE_FLAG=""
   if [ "{{use-cache}}" = "true" ]; then
     CACHE_FLAG="--use-cache"
@@ -12,7 +21,7 @@ run-single l2_block_num use-cache="false" prove="false":
   if [ "{{prove}}" = "true" ]; then
     PROVE_FLAG="--prove"
   fi
-  cargo run --bin single --release -- --l2-block {{l2_block_num}} $CACHE_FLAG $PROVE_FLAG
+  cargo run --bin single -- --l2-block {{l2_block_num}} $CACHE_FLAG $PROVE_FLAG
 
 # Runs the op-succinct program for multiple blocks.
 run-multi start end use-cache="false" prove="false":
@@ -32,10 +41,18 @@ run-multi start end use-cache="false" prove="false":
 # If no range is provided, runs for the last 5 finalized blocks.
 cost-estimator *args='':
   #!/usr/bin/env bash
+
+  set -a
+  L1_RPC="http://$(kurtosis port print eigenda-memstore-devnet el-1-geth-teku rpc)"
+  L1_BEACON_RPC="$(kurtosis port print eigenda-memstore-devnet cl-1-teku-geth http)"
+  L2_RPC="$(kurtosis port print eigenda-memstore-devnet op-el-1-op-geth-op-node-op-kurtosis rpc)"
+  L2_NODE_RPC="$(kurtosis port print eigenda-memstore-devnet op-cl-1-op-node-op-geth-op-kurtosis http)"
+  set +a
+
   if [ -z "{{args}}" ]; then
-    cargo run --bin cost-estimator --release
+    cargo run --bin cost-estimator -v
   else
-    cargo run --bin cost-estimator --release -- {{args}}
+    cargo run --bin cost-estimator -v -- {{args}}
   fi
 
   # Output the data required for the ZKVM execution.
