@@ -112,8 +112,11 @@ op-alloy-network = { version = "0.11.0", default-features = false }
 revm = { version = "19.5.0", default-features = false, features = ["kzg-rs"] }
 
 # Hokulea
-hokulea-host-bin = { path = "../hokulea/bin/host" }
-hokulea-proof = { path = "../hokulea/crates/proof" }
+#hokulea-host-bin = { path = "../hokulea/bin/host" }
+#hokulea-proof = { path = "../hokulea/crates/proof" }
+
+hokulea-host-bin = { git = "https://github.com/Layr-Labs/hokulea", rev = "09dc5626086791627871e81a1780fa3e1ce48af7" }
+hokulea-proof = { git = "https://github.com/Layr-Labs/hokulea", rev = "09dc5626086791627871e81a1780fa3e1ce48af7" }
 
 # SP1
 sp1-sdk = { version = "4.1.3" }

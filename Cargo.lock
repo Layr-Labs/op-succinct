@@ -3361,6 +3361,7 @@ dependencies = [
 [[package]]
 name = "hokulea-client"
 version = "0.1.0"
+source = "git+https://github.com/Layr-Labs/hokulea?rev=09dc5626086791627871e81a1780fa3e1ce48af7#09dc5626086791627871e81a1780fa3e1ce48af7"
 dependencies = [
  "alloy-consensus 0.12.4",
  "hokulea-eigenda",
@@ -3377,6 +3378,7 @@ dependencies = [
 [[package]]
 name = "hokulea-client-bin"
 version = "0.1.0"
+source = "git+https://github.com/Layr-Labs/hokulea?rev=09dc5626086791627871e81a1780fa3e1ce48af7#09dc5626086791627871e81a1780fa3e1ce48af7"
 dependencies = [
  "alloy-primitives",
  "async-trait",
@@ -3395,6 +3397,7 @@ dependencies = [
 [[package]]
 name = "hokulea-compute-proof"
 version = "0.1.0"
+source = "git+https://github.com/Layr-Labs/hokulea?rev=09dc5626086791627871e81a1780fa3e1ce48af7#09dc5626086791627871e81a1780fa3e1ce48af7"
 dependencies = [
  "alloy-primitives",
  "eigenda-v2-struct-rust",
@@ -3407,6 +3410,7 @@ dependencies = [
 [[package]]
 name = "hokulea-eigenda"
 version = "0.1.0"
+source = "git+https://github.com/Layr-Labs/hokulea?rev=09dc5626086791627871e81a1780fa3e1ce48af7#09dc5626086791627871e81a1780fa3e1ce48af7"
 dependencies = [
  "alloy-primitives",
  "alloy-rlp",
@@ -3424,6 +3428,7 @@ dependencies = [
 [[package]]
 name = "hokulea-host-bin"
 version = "0.1.0"
+source = "git+https://github.com/Layr-Labs/hokulea?rev=09dc5626086791627871e81a1780fa3e1ce48af7#09dc5626086791627871e81a1780fa3e1ce48af7"
 dependencies = [
  "alloy-primitives",
  "alloy-rlp",
@@ -3448,6 +3453,7 @@ dependencies = [
 [[package]]
 name = "hokulea-proof"
 version = "0.1.0"
+source = "git+https://github.com/Layr-Labs/hokulea?rev=09dc5626086791627871e81a1780fa3e1ce48af7#09dc5626086791627871e81a1780fa3e1ce48af7"
 dependencies = [
  "alloy-primitives",
  "alloy-rlp",
@@ -3463,7 +3469,6 @@ dependencies = [
  "kona-proof",
  "kona-protocol",
  "kona-rpc",
- "risc0-zkvm",
  "rust-kzg-bn254-primitives",
  "rust-kzg-bn254-verifier",
  "spin",
@@ -6893,8 +6898,8 @@ checksum = "48fd7bd8a6377e15ad9d42a8ec25371b94ddc67abe7c8b9127bec79bebaaae18"
 
 [[package]]
 name = "rust-kzg-bn254-primitives"
-version = "0.1.0"
-source = "git+https://github.com/Layr-Labs/rust-kzg-bn254?rev=b3e532e9aad533009849755d5ad7b9578a16bfb2#b3e532e9aad533009849755d5ad7b9578a16bfb2"
+version = "0.1.1"
+source = "git+https://github.com/Layr-Labs/rust-kzg-bn254?rev=e9c6aac83f765cc5d90fcf78e329ca2177b027a1#e9c6aac83f765cc5d90fcf78e329ca2177b027a1"
 dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",
@@ -6910,7 +6915,7 @@ dependencies = [
 [[package]]
 name = "rust-kzg-bn254-prover"
 version = "0.1.0"
-source = "git+https://github.com/Layr-Labs/rust-kzg-bn254?rev=b3e532e9aad533009849755d5ad7b9578a16bfb2#b3e532e9aad533009849755d5ad7b9578a16bfb2"
+source = "git+https://github.com/Layr-Labs/rust-kzg-bn254?rev=e9c6aac83f765cc5d90fcf78e329ca2177b027a1#e9c6aac83f765cc5d90fcf78e329ca2177b027a1"
 dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",
@@ -6927,7 +6932,7 @@ dependencies = [
 [[package]]
 name = "rust-kzg-bn254-verifier"
 version = "0.1.0"
-source = "git+https://github.com/Layr-Labs/rust-kzg-bn254?rev=b3e532e9aad533009849755d5ad7b9578a16bfb2#b3e532e9aad533009849755d5ad7b9578a16bfb2"
+source = "git+https://github.com/Layr-Labs/rust-kzg-bn254?rev=e9c6aac83f765cc5d90fcf78e329ca2177b027a1#e9c6aac83f765cc5d90fcf78e329ca2177b027a1"
 dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",

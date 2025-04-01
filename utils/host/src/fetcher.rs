@@ -886,7 +886,7 @@ impl OPSuccinctDataFetcher {
         };
         Ok(SingleChainHostWithEigenDA {
             kona_cfg,
-            eigenda_proxy_address: Some("http://127.0.0.1:61181".to_string()),
+            eigenda_proxy_address: Some("http://127.0.0.1:55558".to_string()),
         })
     }
 }
