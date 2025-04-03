@@ -43,3 +43,5 @@ serde_json.workspace = true
 
 [build-dependencies]
 op-succinct-build-utils.workspace = true
+
+hokulea-proof.workspace = true

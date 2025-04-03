@@ -4,6 +4,7 @@ use alloy_primitives::B256;
 use async_trait::async_trait;
 use kona_preimage::BidirectionalChannel;
 use op_succinct_client_utils::{InMemoryOracle, StoreOracle};
+use serde::Serialize;
 
 use crate::fetcher::OPSuccinctDataFetcher;
 use crate::hosts::OPSuccinctHost;
@@ -16,30 +17,32 @@ use kona_preimage::{HintWriter, NativeChannel, OracleReader};
 //use op_succinct_client_utils::client::run_opsuccinct_client;
 use op_succinct_client_utils::core_client::run_opsuccinct_core_client;
 use hokulea_client_bin::witness::OracleEigenDAWitnessProvider;
-use hokulea_proof::eigenda_blob_witness::EigenDABlobWitnessData;
+use hokulea_proof::eigenda_blob_witness::{self, EigenDABlobWitnessData};
 use hokulea_proof::eigenda_provider::OracleEigenDAProvider;
 use std::sync::Mutex;
 use std::ops::DerefMut;
 
 #[derive(Clone)]
 pub struct EigenDAOPSuccinctHost {
-    pub fetcher: Arc<OPSuccinctDataFetcher>,
+    pub fetcher: Arc<OPSuccinctDataFetcher>,    
 }
 
 #[async_trait]
 impl OPSuccinctHost for EigenDAOPSuccinctHost {
     type Args = SingleChainHostWithEigenDA;
 
-    async fn run(&self, args: &Self::Args) -> Result<InMemoryOracle> {
+    async fn run(&self, args: &Self::Args) -> Result<(InMemoryOracle, Option<Vec<u8>>)> {
         let hint = BidirectionalChannel::new()?;
         let preimage = BidirectionalChannel::new()?;
 
         let server_task = args.start_server(hint.host, preimage.host).await?;        
-        let in_memory_oracle = Self::run_eigenda_witnessgen_client(preimage.client, hint.client).await?;
+        let (in_memory_oracle, eigenda_wit) = Self::run_eigenda_witnessgen_client(preimage.client, hint.client).await?;
         // Unlike the upstream, manually abort the server task, as it will hang if you wait for both tasks to complete.
-        server_task.abort();        
+        server_task.abort();
 
-        Ok(in_memory_oracle)
+        let eigenda_wit_bytes= serde_json::to_vec(&eigenda_wit)?;
+
+        Ok((in_memory_oracle, Some(eigenda_wit_bytes)))
     }
 
     async fn fetch(
@@ -80,7 +83,7 @@ impl EigenDAOPSuccinctHost {
     async fn run_eigenda_witnessgen_client(        
         preimage_chan: NativeChannel,
         hint_chan: NativeChannel,
-    ) -> Result<InMemoryOracle> {
+    ) -> Result<(InMemoryOracle, EigenDABlobWitnessData)> {
         let oracle = Arc::new(StoreOracle::new(
             OracleReader::new(preimage_chan),
             HintWriter::new(hint_chan),
@@ -99,6 +102,6 @@ impl EigenDAOPSuccinctHost {
         let wit = core::mem::take(eigenda_blobs_witness.lock().unwrap().deref_mut());
 
         let in_memory_oracle = InMemoryOracle::populate_from_store(oracle.as_ref())?;
-        Ok(in_memory_oracle)
+        Ok((in_memory_oracle, wit))
     }
 }

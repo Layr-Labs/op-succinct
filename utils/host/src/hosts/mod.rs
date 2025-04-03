@@ -19,7 +19,7 @@ pub trait OPSuccinctHost: Send + Sync + 'static {
     /// Run the host and client program.
     ///
     /// Returns the in-memory oracle which can be supplied to the zkVM.
-    async fn run(&self, args: &Self::Args) -> Result<InMemoryOracle>;
+    async fn run(&self, args: &Self::Args) -> Result<(InMemoryOracle, Option<Vec<u8>>)>;
 
     /// Run the witness generation client.
     async fn run_witnessgen_client(

@@ -14,11 +14,12 @@ extern crate alloc;
 use alloc::sync::Arc;
 
 use op_succinct_client_utils::{
-    boot::BootInfoStruct, client::run_opsuccinct_client, precompiles::zkvm_handle_register,
+    boot::BootInfoStruct, client::run_opsuccinct_client, core_client::run_opsuccinct_core_client, precompiles::zkvm_handle_register
 };
 
 use alloc::vec::Vec;
 use op_succinct_client_utils::InMemoryOracle;
+use hokulea_proof::{eigenda_blob_witness::EigenDABlobWitnessData, preloaded_eigenda_provider::{self, PreloadedEigenDABlobProvider}};
 
 fn main() {
     #[cfg(feature = "tracing-subscriber")]
@@ -41,11 +42,18 @@ fn main() {
         let in_memory_oracle_bytes: Vec<u8> = sp1_zkvm::io::read_vec();
         let oracle = Arc::new(InMemoryOracle::from_raw_bytes(in_memory_oracle_bytes));
 
+        let wit = sp1_zkvm::io::read::<EigenDABlobWitnessData>();
+
+        let preloaded_eigenda_provider: PreloadedEigenDABlobProvider = wit.into();
+
         println!("cycle-tracker-report-start: oracle-verify");
         oracle.verify().expect("key value verification failed");
         println!("cycle-tracker-report-end: oracle-verify");
 
-        let boot_info = run_opsuccinct_client(oracle, Some(zkvm_handle_register))
+        //let boot_info = run_opsuccinct_client(oracle, Some(zkvm_handle_register))
+        //    .await
+        //    .expect("failed to run client");
+        let boot_info = run_opsuccinct_core_client(oracle, preloaded_eigenda_provider, Some(zkvm_handle_register))
             .await
             .expect("failed to run client");
 

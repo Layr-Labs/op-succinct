@@ -9,6 +9,7 @@ use op_succinct_host_utils::{
     },
     fetcher::OPSuccinctDataFetcher,
     get_proof_stdin,
+    get_proof_stdin_with_witness,
     hosts::{default::SingleChainOPSuccinctHost, eigenda::EigenDAOPSuccinctHost, OPSuccinctHost},
     stats::ExecutionStats,
     RANGE_ELF_EMBEDDED,
@@ -76,10 +77,14 @@ async fn execute_blocks_and_write_stats_csv<H: OPSuccinctHost>(
         let host_args = host_args.clone();
         let host = host.clone();
         tokio::spawn(async move {
-            let oracle = host.run(&host_args).await.unwrap();
-            get_proof_stdin(oracle).unwrap()
+            println!("before run oracle");
+            let (oracle,  wit_bytes) = host.run(&host_args).await.unwrap();            
+            //get_proof_stdin(oracle).unwrap()            
+            println!("got eigenda witness");
+            get_proof_stdin_with_witness(oracle, wit_bytes.unwrap()).unwrap()            
         })
     });
+    println!("after get_proof_stdin_with_witness");
 
     let stdins = futures::future::join_all(handles)
         .await

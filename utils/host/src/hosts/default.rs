@@ -22,7 +22,7 @@ pub struct SingleChainOPSuccinctHost {
 impl OPSuccinctHost for SingleChainOPSuccinctHost {
     type Args = SingleChainHost;
 
-    async fn run(&self, args: &Self::Args) -> Result<InMemoryOracle> {
+    async fn run(&self, args: &Self::Args) -> Result<(InMemoryOracle, Option<Vec<u8>>)> {
         let hint = BidirectionalChannel::new()?;
         let preimage = BidirectionalChannel::new()?;
 
@@ -32,7 +32,7 @@ impl OPSuccinctHost for SingleChainOPSuccinctHost {
         // Unlike the upstream, manually abort the server task, as it will hang if you wait for both tasks to complete.
         server_task.abort();
 
-        Ok(in_memory_oracle)
+        Ok((in_memory_oracle, None))
     }
 
     async fn fetch(

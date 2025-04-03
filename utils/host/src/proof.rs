@@ -1,9 +1,11 @@
 use alloy_consensus::Header;
 use alloy_primitives::{Address, B256};
 use anyhow::Result;
+use hokulea_proof::eigenda_blob_witness::EigenDABlobWitnessData;
 use op_succinct_client_utils::{boot::BootInfoStruct, types::AggregationInputs, InMemoryOracle};
 use rkyv::to_bytes;
 use sp1_sdk::{HashableKey, SP1Proof, SP1Stdin};
+use rkyv::{from_bytes, Archive};
 
 /// Get the stdin to generate a proof for the given L2 claim.
 pub fn get_proof_stdin(oracle: InMemoryOracle) -> Result<SP1Stdin> {
@@ -14,6 +16,23 @@ pub fn get_proof_stdin(oracle: InMemoryOracle) -> Result<SP1Stdin> {
 
     let kv_store_bytes = buffer.into_vec();
     stdin.write_slice(&kv_store_bytes);
+
+    Ok(stdin)
+}
+
+/// Get the stdin to generate a proof for the given L2 claim.
+pub fn get_proof_stdin_with_witness(oracle: InMemoryOracle, wit_bytes: Vec<u8>) -> Result<SP1Stdin> {
+    let mut stdin = SP1Stdin::new();
+
+    // Serialize the underlying KV store.
+    let buffer = to_bytes::<rkyv::rancor::Error>(&oracle)?;
+
+    let kv_store_bytes = buffer.into_vec();
+    stdin.write_slice(&kv_store_bytes);
+
+    let wit: EigenDABlobWitnessData = serde_json::from_slice(&wit_bytes)?;
+
+    stdin.write(&wit);
 
     Ok(stdin)
 }
