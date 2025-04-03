@@ -752,7 +752,7 @@ impl OPSuccinctDataFetcher {
         l2_end_block: u64,
         l1_head_hash: Option<B256>,
         safe_db_fallback: bool,
-    ) -> Result<SingleChainHostWithEigenDA> {
+    ) -> Result<SingleChainHost> {
         // If the rollup config is not already loaded, fetch and save it.
         if self.rollup_config.is_none() {
             return Err(anyhow::anyhow!("Rollup config not loaded."));
@@ -850,7 +850,7 @@ impl OPSuccinctDataFetcher {
         // witness data.
         fs::create_dir_all(&data_directory).expect("Failed to create data directory");
 
-        let kona_cfg = SingleChainHost {
+        Ok(SingleChainHost {
             l1_head: l1_head_hash,
             agreed_l2_output_root,
             agreed_l2_head_hash,
@@ -883,10 +883,6 @@ impl OPSuccinctDataFetcher {
             native: false,
             server: true,
             rollup_config_path: self.rollup_config_path.clone(),
-        };
-        Ok(SingleChainHostWithEigenDA {
-            kona_cfg,
-            eigenda_proxy_address: Some("http://127.0.0.1:55558".to_string()),
         })
     }
 }

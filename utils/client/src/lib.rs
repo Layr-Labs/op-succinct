@@ -14,3 +14,5 @@ pub mod types;
 extern crate alloc;
 
 pub mod client;
+
+pub mod core_client;

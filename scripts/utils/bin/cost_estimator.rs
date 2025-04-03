@@ -9,7 +9,7 @@ use op_succinct_host_utils::{
     },
     fetcher::OPSuccinctDataFetcher,
     get_proof_stdin,
-    hosts::{default::SingleChainOPSuccinctHost, OPSuccinctHost},
+    hosts::{default::SingleChainOPSuccinctHost, eigenda::EigenDAOPSuccinctHost, OPSuccinctHost},
     stats::ExecutionStats,
     RANGE_ELF_EMBEDDED,
 };
@@ -218,7 +218,7 @@ async fn main() -> Result<()> {
     );
 
     // Get the host CLIs in order, in parallel.
-    let host = Arc::new(SingleChainOPSuccinctHost {
+    let host = Arc::new(EigenDAOPSuccinctHost {
         fetcher: Arc::new(data_fetcher),
     });
     let host_args = futures::stream::iter(split_ranges.iter())

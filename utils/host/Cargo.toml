@@ -26,6 +26,8 @@ kona-preimage.workspace = true
 
 # hokulea
 hokulea-host-bin.workspace = true
+hokulea-client-bin.workspace = true
+hokulea-proof.workspace = true
 
 # alloy
 alloy-provider.workspace = true

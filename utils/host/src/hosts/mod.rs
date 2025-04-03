@@ -1,4 +1,5 @@
 pub mod default;
+pub mod eigenda;
 
 use crate::fetcher::OPSuccinctDataFetcher;
 use alloy_primitives::B256;

@@ -4,7 +4,7 @@ use op_succinct_host_utils::{
     block_range::get_validated_block_range,
     fetcher::OPSuccinctDataFetcher,
     get_proof_stdin,
-    hosts::{default::SingleChainOPSuccinctHost, OPSuccinctHost},
+    hosts::{default::SingleChainOPSuccinctHost, OPSuccinctHost, eigenda::EigenDAOPSuccinctHost},
     stats::ExecutionStats,
     RANGE_ELF_EMBEDDED,
 };
@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
     let (l2_start_block, l2_end_block) =
         get_validated_block_range(&data_fetcher, args.start, args.end, DEFAULT_RANGE).await?;
 
-    let host = SingleChainOPSuccinctHost {
+    let host = EigenDAOPSuccinctHost {
         fetcher: Arc::new(data_fetcher.clone()),
     };
     let host_args = host

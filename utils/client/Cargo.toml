@@ -27,6 +27,7 @@ kona-genesis.workspace = true
 
 # hokulea
 hokulea-proof.workspace = true
+hokulea-eigenda.workspace = true
 
 # general
 anyhow.workspace = true

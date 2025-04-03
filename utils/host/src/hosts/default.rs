@@ -20,14 +20,14 @@ pub struct SingleChainOPSuccinctHost {
 
 #[async_trait]
 impl OPSuccinctHost for SingleChainOPSuccinctHost {
-    type Args = SingleChainHostWithEigenDA;
+    type Args = SingleChainHost;
 
     async fn run(&self, args: &Self::Args) -> Result<InMemoryOracle> {
         let hint = BidirectionalChannel::new()?;
         let preimage = BidirectionalChannel::new()?;
 
         let server_task = args.start_server(hint.host, preimage.host).await?;
-        println!("before running run_witnessgen_client");
+        
         let in_memory_oracle = Self::run_witnessgen_client(preimage.client, hint.client).await?;
         // Unlike the upstream, manually abort the server task, as it will hang if you wait for both tasks to complete.
         server_task.abort();
@@ -41,7 +41,7 @@ impl OPSuccinctHost for SingleChainOPSuccinctHost {
         l2_end_block: u64,
         l1_head_hash: Option<B256>,
         safe_db_fallback: Option<bool>,
-    ) -> Result<SingleChainHostWithEigenDA> {
+    ) -> Result<SingleChainHost> {
         let host = self
             .fetcher
             .get_host_args(
@@ -55,7 +55,7 @@ impl OPSuccinctHost for SingleChainOPSuccinctHost {
     }
 
     fn get_l1_head_hash(&self, args: &Self::Args) -> Option<B256> {
-        Some(args.kona_cfg.l1_head)
+        Some(args.l1_head)
     }
 }
 
