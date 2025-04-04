@@ -10,9 +10,6 @@ use crate::fetcher::OPSuccinctDataFetcher;
 use crate::hosts::OPSuccinctHost;
 use anyhow::Result;
 
-use hokulea_host_bin::cfg::SingleChainHostWithEigenDA;
-use tracing::info;
-
 #[derive(Clone)]
 pub struct SingleChainOPSuccinctHost {
     pub fetcher: Arc<OPSuccinctDataFetcher>,

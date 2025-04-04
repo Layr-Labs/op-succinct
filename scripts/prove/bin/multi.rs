@@ -4,7 +4,7 @@ use op_succinct_host_utils::{
     block_range::get_validated_block_range,
     fetcher::OPSuccinctDataFetcher,
     get_proof_stdin,
-    hosts::{default::SingleChainOPSuccinctHost, OPSuccinctHost, eigenda::EigenDAOPSuccinctHost},
+    hosts::{OPSuccinctHost, eigenda::EigenDAOPSuccinctHost},
     stats::ExecutionStats,
     RANGE_ELF_EMBEDDED,
 };

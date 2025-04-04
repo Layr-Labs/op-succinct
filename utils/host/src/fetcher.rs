@@ -6,7 +6,6 @@ use alloy_rlp::Decodable;
 use alloy_sol_types::SolValue;
 use anyhow::Result;
 use anyhow::{anyhow, bail};
-use hokulea_host_bin::cfg::SingleChainHostWithEigenDA;
 use kona_genesis::RollupConfig;
 use kona_host::single::SingleChainHost;
 use kona_protocol::calculate_tx_l1_cost_fjord;

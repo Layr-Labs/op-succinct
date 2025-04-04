@@ -56,5 +56,6 @@ strum.workspace = true
 metrics.workspace = true
 metrics-process.workspace = true
 metrics-exporter-prometheus.workspace = true
+bincode.workspace = true
 
 [features]

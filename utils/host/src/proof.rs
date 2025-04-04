@@ -1,11 +1,9 @@
 use alloy_consensus::Header;
 use alloy_primitives::{Address, B256};
 use anyhow::Result;
-use hokulea_proof::eigenda_blob_witness::EigenDABlobWitnessData;
 use op_succinct_client_utils::{boot::BootInfoStruct, types::AggregationInputs, InMemoryOracle};
 use rkyv::to_bytes;
 use sp1_sdk::{HashableKey, SP1Proof, SP1Stdin};
-use rkyv::{from_bytes, Archive};
 
 /// Get the stdin to generate a proof for the given L2 claim.
 pub fn get_proof_stdin(oracle: InMemoryOracle) -> Result<SP1Stdin> {

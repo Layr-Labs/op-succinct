@@ -4,7 +4,6 @@ use alloy_primitives::B256;
 use async_trait::async_trait;
 use kona_preimage::BidirectionalChannel;
 use op_succinct_client_utils::{InMemoryOracle, StoreOracle};
-use serde::Serialize;
 
 use crate::fetcher::OPSuccinctDataFetcher;
 use crate::hosts::OPSuccinctHost;
@@ -17,7 +16,7 @@ use kona_preimage::{HintWriter, NativeChannel, OracleReader};
 //use op_succinct_client_utils::client::run_opsuccinct_client;
 use op_succinct_client_utils::core_client::run_opsuccinct_core_client;
 use hokulea_client_bin::witness::OracleEigenDAWitnessProvider;
-use hokulea_proof::eigenda_blob_witness::{self, EigenDABlobWitnessData};
+use hokulea_proof::eigenda_blob_witness::EigenDABlobWitnessData;
 use hokulea_proof::eigenda_provider::OracleEigenDAProvider;
 use std::sync::Mutex;
 use std::ops::DerefMut;
@@ -97,8 +96,9 @@ impl EigenDAOPSuccinctHost {
 
         run_opsuccinct_core_client(oracle.clone(), eigenda_blob_and_witness_provider, Some(zkvm_handle_register)).await?;
 
-        let witness = core::mem::take(eigenda_blobs_witness.lock().unwrap().deref_mut());
-        let witness_byte = serde_json::to_vec(&witness)?;
+        let witness = core::mem::take(eigenda_blobs_witness.lock().unwrap().deref_mut());       
+
+        let witness_byte = serde_cbor::to_vec(&witness)?;
 
         let in_memory_oracle = InMemoryOracle::populate_from_store(oracle.as_ref(), Some(witness_byte))?;
         Ok(in_memory_oracle)
