@@ -79,7 +79,7 @@ impl<H: OPSuccinctHost> OPSuccinctProofRequester<H> {
                 .await?;
         }
 
-        let (mem_kv_store, _) = self.host.run(&host_args).await?;
+        let mem_kv_store = self.host.run(&host_args).await?;
         let sp1_stdin = get_proof_stdin(mem_kv_store).context("Failed to get proof stdin")?;
 
         Ok(sp1_stdin)

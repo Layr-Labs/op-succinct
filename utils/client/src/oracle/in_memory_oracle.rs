@@ -28,6 +28,8 @@ use super::StoreOracle;
 )]
 pub struct InMemoryOracle {
     pub cache: HashMap<[u8; 32], Vec<u8>, BytesHasherBuilder>,
+    // an opaque byte that contain witness
+    pub witness: Option<Vec<u8>>,
 }
 
 impl InMemoryOracle {
@@ -44,7 +46,7 @@ impl InMemoryOracle {
     }
 
     /// Populates the InMemoryOracle with data from a StoreOracle.
-    pub fn populate_from_store<OR, HW>(store_oracle: &StoreOracle<OR, HW>) -> Result<Self>
+    pub fn populate_from_store<OR, HW>(store_oracle: &StoreOracle<OR, HW>, witness: Option<Vec<u8>>) -> Result<Self>
     where
         OR: PreimageOracleClient,
         HW: HintWriterClient,
@@ -59,7 +61,7 @@ impl InMemoryOracle {
             let key_bytes: [u8; 32] = (*key).into();
             cache.insert(key_bytes, value.clone());
         }
-        Ok(Self { cache })
+        Ok(Self { cache, witness })
     }
 }
 

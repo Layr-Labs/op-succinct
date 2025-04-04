@@ -31,7 +31,7 @@ async fn execute_batch() -> Result<()> {
         .fetch(l2_start_block, l2_end_block, None, Some(false))
         .await?;
 
-    let (oracle, _) = host.run(&host_args).await?;
+    let oracle = host.run(&host_args).await?;
 
     // Get the stdin for the block.
     let sp1_stdin = get_proof_stdin(oracle)?;

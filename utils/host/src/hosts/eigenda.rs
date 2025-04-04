@@ -31,18 +31,16 @@ pub struct EigenDAOPSuccinctHost {
 impl OPSuccinctHost for EigenDAOPSuccinctHost {
     type Args = SingleChainHostWithEigenDA;
 
-    async fn run(&self, args: &Self::Args) -> Result<(InMemoryOracle, Option<Vec<u8>>)> {
+    async fn run(&self, args: &Self::Args) -> Result<InMemoryOracle> {
         let hint = BidirectionalChannel::new()?;
         let preimage = BidirectionalChannel::new()?;
 
         let server_task = args.start_server(hint.host, preimage.host).await?;        
-        let (in_memory_oracle, eigenda_wit) = Self::run_eigenda_witnessgen_client(preimage.client, hint.client).await?;
+        let in_memory_oracle = Self::run_eigenda_witnessgen_client(preimage.client, hint.client).await?;
         // Unlike the upstream, manually abort the server task, as it will hang if you wait for both tasks to complete.
         server_task.abort();
 
-        let eigenda_wit_bytes= serde_json::to_vec(&eigenda_wit)?;
-
-        Ok((in_memory_oracle, Some(eigenda_wit_bytes)))
+        Ok(in_memory_oracle)
     }
 
     async fn fetch(
@@ -83,7 +81,7 @@ impl EigenDAOPSuccinctHost {
     async fn run_eigenda_witnessgen_client(        
         preimage_chan: NativeChannel,
         hint_chan: NativeChannel,
-    ) -> Result<(InMemoryOracle, EigenDABlobWitnessData)> {
+    ) -> Result<InMemoryOracle> {
         let oracle = Arc::new(StoreOracle::new(
             OracleReader::new(preimage_chan),
             HintWriter::new(hint_chan),
@@ -99,9 +97,10 @@ impl EigenDAOPSuccinctHost {
 
         run_opsuccinct_core_client(oracle.clone(), eigenda_blob_and_witness_provider, Some(zkvm_handle_register)).await?;
 
-        let wit = core::mem::take(eigenda_blobs_witness.lock().unwrap().deref_mut());
+        let witness = core::mem::take(eigenda_blobs_witness.lock().unwrap().deref_mut());
+        let witness_byte = serde_json::to_vec(&witness)?;
 
-        let in_memory_oracle = InMemoryOracle::populate_from_store(oracle.as_ref())?;
-        Ok((in_memory_oracle, wit))
+        let in_memory_oracle = InMemoryOracle::populate_from_store(oracle.as_ref(), Some(witness_byte))?;
+        Ok(in_memory_oracle)
     }
 }

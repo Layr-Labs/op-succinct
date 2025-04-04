@@ -5955,6 +5955,8 @@ dependencies = [
  "hokulea-proof",
  "kona-proof",
  "op-succinct-client-utils",
+ "serde",
+ "serde_json",
  "sp1-zkvm",
  "tracing",
  "tracing-subscriber",

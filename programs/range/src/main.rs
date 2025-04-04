@@ -20,6 +20,8 @@ use op_succinct_client_utils::{
 use alloc::vec::Vec;
 use op_succinct_client_utils::InMemoryOracle;
 use hokulea_proof::{eigenda_blob_witness::EigenDABlobWitnessData, preloaded_eigenda_provider::{self, PreloadedEigenDABlobProvider}};
+use serde::{Deserialize};
+use serde_json;
 
 fn main() {
     #[cfg(feature = "tracing-subscriber")]
@@ -42,9 +44,9 @@ fn main() {
         let in_memory_oracle_bytes: Vec<u8> = sp1_zkvm::io::read_vec();
         let oracle = Arc::new(InMemoryOracle::from_raw_bytes(in_memory_oracle_bytes));
 
-        let wit = sp1_zkvm::io::read::<EigenDABlobWitnessData>();
-
-        let preloaded_eigenda_provider: PreloadedEigenDABlobProvider = wit.into();
+        let witness: EigenDABlobWitnessData = serde_json::from_slice(&oracle.witness.as_ref().unwrap()).expect("cannot deserialize eigenda witness");
+        
+        let preloaded_eigenda_provider: PreloadedEigenDABlobProvider = witness.into();
 
         println!("cycle-tracker-report-start: oracle-verify");
         oracle.verify().expect("key value verification failed");

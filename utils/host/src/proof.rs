@@ -20,23 +20,6 @@ pub fn get_proof_stdin(oracle: InMemoryOracle) -> Result<SP1Stdin> {
     Ok(stdin)
 }
 
-/// Get the stdin to generate a proof for the given L2 claim.
-pub fn get_proof_stdin_with_witness(oracle: InMemoryOracle, wit_bytes: Vec<u8>) -> Result<SP1Stdin> {
-    let mut stdin = SP1Stdin::new();
-
-    // Serialize the underlying KV store.
-    let buffer = to_bytes::<rkyv::rancor::Error>(&oracle)?;
-
-    let kv_store_bytes = buffer.into_vec();
-    stdin.write_slice(&kv_store_bytes);
-
-    let wit: EigenDABlobWitnessData = serde_json::from_slice(&wit_bytes)?;
-
-    stdin.write(&wit);
-
-    Ok(stdin)
-}
-
 /// Get the stdin for the aggregation proof.
 pub fn get_agg_proof_stdin(
     proofs: Vec<SP1Proof>,

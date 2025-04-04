@@ -113,7 +113,7 @@ where
             .await
             .context("Failed to get host CLI args")?;
 
-        let (mem_kv_store, _) = self.host.run(&host_args).await?;
+        let mem_kv_store = self.host.run(&host_args).await?;
 
         let sp1_stdin = match get_proof_stdin(mem_kv_store) {
             Ok(stdin) => stdin,
